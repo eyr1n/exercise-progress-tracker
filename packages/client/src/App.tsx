@@ -1,8 +1,18 @@
-import { useState } from 'react';
-import type { Student } from '@exercise-progress-tracker/server/hc';
+import { useEffect, useState } from 'react';
+import { hcWithType, type Student } from '@exercise-progress-tracker/server/hc';
+
+const client = hcWithType('http://localhost:3000/');
+const res = await client[':id'][":exercise"].$post({
+    param: {
+      id: "M211808",
+    exercise: 'ex1',
+  },
+});
 
 export function App() {
   const [students, _setStudents] = useState<Student[]>([]);
+
+  useEffect;
 
   return (
     <>

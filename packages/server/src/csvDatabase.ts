@@ -4,7 +4,7 @@ import { type Parser, parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import type { ZodObject, ZodRawShape, z } from 'zod';
 
-export class CSVDatabase<T extends ZodObject<ZodRawShape>> {
+export class CsvDatabase<T extends ZodObject<ZodRawShape>> {
   #schema: T;
   #primaryKey: keyof z.infer<T>;
   #path: PathLike;

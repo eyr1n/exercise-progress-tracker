@@ -1,12 +1,12 @@
 import type { PathLike } from 'node:fs';
-import { CSVDatabase } from './csv_database.js';
+import { CsvDatabase } from './csvDatabase.js';
 import { type Exercise, type Student, StudentSchema } from './schemas/index.js';
 
 export class ExerciseProgressTracker {
-  #db: CSVDatabase<typeof StudentSchema>;
+  #db: CsvDatabase<typeof StudentSchema>;
 
   constructor(path: PathLike) {
-    this.#db = new CSVDatabase(StudentSchema, 'id', path);
+    this.#db = new CsvDatabase(StudentSchema, 'id', path);
   }
 
   students() {
@@ -31,7 +31,7 @@ export class ExerciseProgressTracker {
     if (student == null || student[exercise] === 'x') {
       return false;
     }
-    student[exercise] = 'x';
+    await this.#db.set(id, { ...student, [exercise]: "x" });
     return true;
   }
 }

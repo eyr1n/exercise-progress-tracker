@@ -3,13 +3,18 @@ import { Hono } from 'hono';
 import { join } from 'node:path';
 import { z } from 'zod';
 import { ExerciseProgressTracker } from './exerciseProgressTracker.js';
-import { ExerciseSchema } from './schemas/index.js';
+import {
+  ExerciseSchema,
+  StudentSchema,
+  type Exercise,
+} from './schemas/index.js';
+import { cors } from 'hono/cors';
 
 const tracker = new ExerciseProgressTracker(
   join(import.meta.dirname, '../../../db.csv'),
 );
 
-export const app = new Hono()
+export const app = new Hono().use('/*', cors())
   .get('/', async (c) => {
     const students = await tracker.students();
     return c.json(students);
@@ -20,30 +25,33 @@ export const app = new Hono()
     return student != null ? c.json(student) : c.notFound();
   })
   .post(
-    '/:id/check',
+    '/:id',
     zValidator(
-      'form',
-      z.object({
-        exercise: ExerciseSchema,
-      }),
+      'json',
+      StudentSchema.pick(
+        Object.fromEntries(
+          ExerciseSchema.options.map((key) => [key, true]),
+        ) as Record<Exercise, true>,
+      ),
     ),
     async (c) => {
       const id = c.req.param('id');
-      const { exercise } = c.req.valid('form');
-      return c.json(await tracker.check(id, exercise));
+      const exercises= c.req.valid('json');
+      return c.json(await tracker.set(id, exercises));
     },
   )
   .post(
-    '/api/:id/uncheck',
+    '/:id/:exercise',
     zValidator(
-      'form',
+      "param",
       z.object({
         exercise: ExerciseSchema,
       }),
     ),
     async (c) => {
       const id = c.req.param('id');
-      const { exercise } = c.req.valid('form');
+      const { exercise } = c.req.valid('param');
+      console.log(id,exercise)
       return c.json(await tracker.check(id, exercise));
     },
   );
