@@ -1,9 +1,9 @@
-import { AppBar, Button, Container, Toolbar } from '@mui/material';
+import { AppBar, Button, Container, Stack, Toolbar } from '@mui/material';
 import { Link, Outlet } from 'react-router';
 
 export function Layout() {
   return (
-    <>
+    <Stack sx={{ height: '100dvh', overflow: 'auto' }}>
       <AppBar position="sticky">
         <Container disableGutters>
           <Toolbar>
@@ -19,9 +19,7 @@ export function Layout() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container sx={{ marginY: 2 }}>
-        <Outlet />
-      </Container>
-    </>
+      <Outlet />
+    </Stack>
   );
 }

@@ -1,6 +1,8 @@
 import { hcWithType, type Student } from '@exercise-progress-tracker/server/hc';
+import { Edit } from '@mui/icons-material';
 import {
-  Box,
+  Container,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -10,6 +12,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 
 const client = hcWithType('http://localhost:3000/');
 
@@ -26,38 +29,51 @@ export function Home() {
   }, []);
 
   return (
-    <Paper sx={{maxHeight:"80dvh",height: "100%",
-        display: "flex",
-        overflow: "hidden"}}>
-    <TableContainer>
-      <Table size="small" stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell>学籍番号</TableCell>
-            <TableCell>グループ</TableCell>
-            <TableCell>名前</TableCell>
-            <TableCell>ex1</TableCell>
-            <TableCell>ex2</TableCell>
-            <TableCell>ex3</TableCell>
-            <TableCell>ex4</TableCell>
-            <TableCell>ex5</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {students.map((student) => (
-            <TableRow key={student.id}>
-              <TableCell>{student.id}</TableCell>
-              <TableCell>{student.group}</TableCell>
-              <TableCell>{student.name}</TableCell>
-              <TableCell>{student.ex1}</TableCell>
-              <TableCell>{student.ex2}</TableCell>
-              <TableCell>{student.ex3}</TableCell>
-              <TableCell>{student.ex4}</TableCell>
-              <TableCell>{student.ex5}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer></Paper>
+    <Container sx={{ paddingY: 2, flexGrow: 1, overflow: 'hidden' }}>
+      <Paper
+        sx={{
+          display: 'flex',
+          maxHeight: '100%',
+          overflow: 'auto',
+        }}
+      >
+        <TableContainer>
+          <Table size="small" stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>学籍番号</TableCell>
+                <TableCell>グループ</TableCell>
+                <TableCell>名前</TableCell>
+                <TableCell>ex1</TableCell>
+                <TableCell>ex2</TableCell>
+                <TableCell>ex3</TableCell>
+                <TableCell>ex4</TableCell>
+                <TableCell>ex5</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell padding="checkbox">
+                    <IconButton component={Link} to={`/edit?id=${student.id}`}>
+                      <Edit />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>{student.id}</TableCell>
+                  <TableCell>{student.group}</TableCell>
+                  <TableCell>{student.name}</TableCell>
+                  <TableCell>{student.ex1}</TableCell>
+                  <TableCell>{student.ex2}</TableCell>
+                  <TableCell>{student.ex3}</TableCell>
+                  <TableCell>{student.ex4}</TableCell>
+                  <TableCell>{student.ex5}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Container>
   );
 }
