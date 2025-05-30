@@ -58,7 +58,6 @@ app.get('/', async (c) => {
       </table>
       <script type="text/javascript">
         const idElm = document.querySelector("#id");
-
       </script>
     </>,
   );
