@@ -53,7 +53,10 @@ export class CSVDatabase<T extends ZodObject<ZodRawShape>> {
       const parser = createReadStream(this.#path, this.#encoding).pipe(
         parse({ columns: true }),
       );
-      this.#records = await parseAndValidate(parser, this.#schema);
+      this.#records = [];
+      for await (const record of parseAndValidate(parser, this.#schema)) {
+        this.#records.push(record);
+      }
     }
     return this.#records;
   }
@@ -85,13 +88,11 @@ export class CSVDatabase<T extends ZodObject<ZodRawShape>> {
   }
 }
 
-async function parseAndValidate<T extends ZodObject<ZodRawShape>>(
+async function* parseAndValidate<T extends ZodObject<ZodRawShape>>(
   parser: Parser,
   schema: T,
-): Promise<z.infer<T>[]> {
-  const records: z.infer<T>[] = [];
+): AsyncGenerator<z.infer<T>> {
   for await (const record of parser) {
-    records.push(await schema.parseAsync(record));
+    yield await schema.parseAsync(record);
   }
-  return records;
 }

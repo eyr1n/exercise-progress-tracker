@@ -1,25 +1,15 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { CSVDatabase } from './csv_database.js';
-import { z } from 'zod';
+import { Student } from './student.js';
 
-const schema = z.object({
-  id: z.string(),
-  group: z.string(),
-  ex1: z.enum(['', 'x']).optional(),
-  ex2: z.enum(['', 'x']).optional(),
-  ex3: z.enum(['', 'x']).optional(),
-  ex4: z.enum(['', 'x']).optional(),
-  ex5: z.enum(['', 'x']).optional(),
-});
-
-const db = new CSVDatabase(schema, 'id', 'db.csv');
+const db = new CSVDatabase(Student, 'id', 'db.csv');
 
 const app = new Hono();
 
 app.get('/', async (c) => {
-  const record = await db.get('M211808');
-  return c.text(JSON.stringify(record));
+  const records = await db.records();
+  return c.text(JSON.stringify(records));
 });
 
 app.get('/set', async (c) => {
