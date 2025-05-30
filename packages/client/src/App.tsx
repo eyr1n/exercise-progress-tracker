@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import type { Student } from '@exercise-progress-tracker/server/hc';
 
 export function App() {
-  const [students, setStudents] = useState([]);
+  const [students, _setStudents] = useState<Student[]>([]);
 
   return (
     <>
