@@ -7,7 +7,6 @@ import { ExerciseProgressTracker } from './exerciseProgressTracker.js';
 import { join } from 'node:path';
 import { Layout } from './Layout.js';
 import { jsxRenderer } from 'hono/jsx-renderer';
-import { Form } from './Form.js';
 
 const tracker = new ExerciseProgressTracker(
   join(import.meta.dirname, '../db.csv'),
@@ -59,7 +58,7 @@ app.get('/', async (c) => {
       </table>
       <script type="text/javascript">
         const idElm = document.querySelector("#id");
-        
+
       </script>
     </>,
   );
