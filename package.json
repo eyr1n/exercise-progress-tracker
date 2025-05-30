@@ -2,7 +2,7 @@
   "name": "@exercise-progress-tracker/workspace",
   "private": true,
   "workspaces": [
-    "packages/client",
-    "packages/server"
+    "packages/server",
+    "packages/client"
   ]
 }

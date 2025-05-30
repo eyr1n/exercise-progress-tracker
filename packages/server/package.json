@@ -1,8 +1,16 @@
 {
   "name": "@exercise-progress-tracker/server",
   "type": "module",
+    "exports": {
+    "./hc": {
+      "import": {
+        "default": "./dist/hc.js",
+        "types": "./dist/hc.d.ts"
+      }
+    }
+  },
   "scripts": {
-    "dev": "tsx watch src/index.tsx",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "biome lint .",
