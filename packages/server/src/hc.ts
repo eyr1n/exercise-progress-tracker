@@ -6,3 +6,5 @@ export type Client = typeof client;
 
 export const hcWithType = (...args: Parameters<typeof hc>): Client =>
   hc<typeof app>(...args);
+
+export * from './schemas/index.js';

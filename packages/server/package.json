@@ -1,7 +1,7 @@
 {
   "name": "@exercise-progress-tracker/server",
   "type": "module",
-    "exports": {
+  "exports": {
     "./hc": {
       "import": {
         "default": "./dist/hc.js",

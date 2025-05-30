@@ -13,8 +13,8 @@
     "start": "run-p start:*",
     "start:server": "npm run start --workspace=@exercise-progress-tracker/server",
     "start:client": "npm run start --workspace=@exercise-progress-tracker/client",
-    "lint": "npm run lint --workspaces",
-    "format": "npm run format --workspaces",
+    "lint": "npm run lint --workspaces --",
+    "format": "npm run format --workspaces --",
     "preinstall": "npx only-allow npm"
   },
   "devDependencies": {

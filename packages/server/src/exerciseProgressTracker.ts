@@ -1,7 +1,6 @@
 import type { PathLike } from 'node:fs';
 import { CSVDatabase } from './csv_database.js';
-import type { Exercise } from './exercise.js';
-import { StudentSchema } from './student.js';
+import { type Exercise, type Student, StudentSchema } from './schemas/index.js';
 
 export class ExerciseProgressTracker {
   #db: CSVDatabase<typeof StudentSchema>;
@@ -18,21 +17,21 @@ export class ExerciseProgressTracker {
     return this.#db.get(id);
   }
 
+  async set(id: string, exercises: Pick<Student, Exercise>) {
+    const student = await this.get(id);
+    if (student == null) {
+      return false;
+    }
+    await this.#db.set(id, { ...student, ...exercises });
+    return true;
+  }
+
   async check(id: string, exercise: Exercise) {
-    const student = await this.#db.get(id);
+    const student = await this.get(id);
     if (student == null || student[exercise] === 'x') {
       return false;
     }
     student[exercise] = 'x';
-    return true;
-  }
-
-  async uncheck(id: string, exercise: Exercise) {
-    const student = await this.#db.get(id);
-    if (student == null || student[exercise] === '') {
-      return false;
-    }
-    student[exercise] = '';
     return true;
   }
 }
