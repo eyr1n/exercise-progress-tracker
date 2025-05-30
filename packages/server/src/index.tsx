@@ -9,7 +9,7 @@ import { Layout } from './Layout.js';
 import { jsxRenderer } from 'hono/jsx-renderer';
 
 const tracker = new ExerciseProgressTracker(
-  join(import.meta.dirname, '../db.csv'),
+  join(import.meta.dirname, '../../../db.csv'),
 );
 
 const app = new Hono();

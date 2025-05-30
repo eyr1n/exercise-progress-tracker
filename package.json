@@ -1,25 +1,7 @@
 {
-  "name": "exercise-progress-tracker",
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/index.tsx",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "lint": "biome lint .",
-    "format": "biome format ."
-  },
-  "dependencies": {
-    "@hono/node-server": "^1.14.3",
-    "@hono/zod-validator": "^0.7.0",
-    "csv-parse": "^5.6.0",
-    "csv-stringify": "^6.5.2",
-    "hono": "^4.7.10",
-    "zod": "^3.25.42"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@types/node": "^20.11.17",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
-  }
+  "name": "@exercise-progress-tracker/workspace",
+  "private": true,
+  "workspaces": [
+    "packages/server"
+  ]
 }
