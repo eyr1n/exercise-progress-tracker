@@ -51,7 +51,6 @@ export const app = new Hono().use('/*', cors())
     async (c) => {
       const id = c.req.param('id');
       const { exercise } = c.req.valid('param');
-      console.log(id,exercise)
       return c.json(await tracker.check(id, exercise));
     },
   );
