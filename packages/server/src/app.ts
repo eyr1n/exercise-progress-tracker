@@ -16,17 +16,31 @@ const tracker = new ExerciseProgressTracker(
 
 export const app = new Hono()
   .use('/*', cors())
-  .get('/', async (c) => {
+  .get('/students', async (c) => {
     const students = await tracker.students();
     return c.json(students);
   })
-  .get('/:id', async (c) => {
+  .get('/student/:id', async (c) => {
     const id = c.req.param('id');
-    const student = await tracker.get(id);
-    return student != null ? c.json(student) : c.notFound();
+    return c.json(await tracker.get(id));
   })
   .post(
-    '/:id',
+    '/check/:id/:exercise',
+    zValidator(
+      'param',
+      z.object({
+        id: z.string(),
+        exercise: ExerciseSchema,
+      }),
+    ),
+    async (c) => {
+      const { id, exercise } = c.req.valid('param');
+      await tracker.check(id, exercise);
+      return c.json(await tracker.get(id));
+    },
+  )
+  .post(
+    '/edit/:id',
     zValidator(
       'json',
       StudentSchema.pick(
@@ -38,20 +52,7 @@ export const app = new Hono()
     async (c) => {
       const id = c.req.param('id');
       const exercises = c.req.valid('json');
-      return c.json(await tracker.set(id, exercises));
-    },
-  )
-  .post(
-    '/:id/:exercise',
-    zValidator(
-      'param',
-      z.object({
-        id: z.string(),
-        exercise: ExerciseSchema,
-      }),
-    ),
-    async (c) => {
-      const { id, exercise } = c.req.valid('param');
-      return c.json(await tracker.check(id, exercise));
+      await tracker.set(id, exercises);
+      return c.json(await tracker.get(id));
     },
   );

@@ -1,17 +1,16 @@
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Home } from './Home.tsx';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import { Layout } from './Layout.tsx';
-import { Check } from './Check.tsx';
-import { Edit } from './Edit.tsx';
+import { Check } from './Check';
+import { Edit } from './Edit';
+import { Home } from './Home';
+import { Layout } from './Layout';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
 
 const theme = createTheme();
 

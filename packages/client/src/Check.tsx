@@ -1,66 +1,113 @@
-import { useEffect, useState } from 'react';
-import { hcWithType, type Student } from '@exercise-progress-tracker/server/hc';
 import {
-  Button,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-} from '@mui/material';
+  hcWithType,
+  type Exercise,
+  type Student,
+} from '@exercise-progress-tracker/server/hc';
+import { Button, Stack, TextField, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
 const client = hcWithType('http://localhost:3000/');
 
 export function Check() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const id = searchParams.get('id') ?? '';
+  const setId = (id: string) => {
+    setSearchParams({ id });
+  };
+  const [student, setStudent] = useState<Student | null>(null);
 
   useEffect(() => {
-    client.index
-      .$get()
+    client.student[':id']
+      .$get({
+        param: {
+          id,
+        },
+      })
       .then((res) => res.json())
-      .then((students) => {
-        setStudents(students);
+      .then((student) => {
+        setStudent(student);
       });
-  }, []);
+  }, [id]);
+
+  const check = (exercise: Exercise) => {
+    if (
+      window.confirm(
+        `${student?.name}さん(${student?.id})の${exercise}を完了しますか?`,
+      )
+    ) {
+      client.check[':id'][':exercise']
+        .$post({
+          param: {
+            id,
+            exercise,
+          },
+        })
+        .then((res) => res.json())
+        .then((student) => {
+          setStudent(student);
+        });
+    }
+  };
 
   return (
-    <Container>
-      <TextField type="text" />
-      <Button type="button">完了確認</Button>
-      <Button type="button">訂正</Button>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>学籍番号</TableCell>
-              <TableCell>名前</TableCell>
-              <TableCell>グループ</TableCell>
-              <TableCell>ex1</TableCell>
-              <TableCell>ex2</TableCell>
-              <TableCell>ex3</TableCell>
-              <TableCell>ex4</TableCell>
-              <TableCell>ex5</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {students.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.id}</TableCell>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.group}</TableCell>
-                <TableCell>{student.ex1}</TableCell>
-                <TableCell>{student.ex2}</TableCell>
-                <TableCell>{student.ex3}</TableCell>
-                <TableCell>{student.ex4}</TableCell>
-                <TableCell>{student.ex5}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
+    <Stack gap={2}>
+      <Typography>学籍番号: {student?.id}</Typography>
+      <Typography>グループ: {student?.group}</Typography>
+      <Typography>名前: {student?.name}</Typography>
+      <TextField
+        label="学籍番号"
+        autoComplete="off"
+        value={id}
+        onChange={(e) => {
+          setId(e.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        disabled={student?.ex1 !== ''}
+        onClick={() => {
+          check('ex1');
+        }}
+      >
+        ex1
+      </Button>
+      <Button
+        variant="contained"
+        disabled={student?.ex2 !== ''}
+        onClick={() => {
+          check('ex2');
+        }}
+      >
+        ex2
+      </Button>
+      <Button
+        variant="contained"
+        disabled={student?.ex3 !== ''}
+        onClick={() => {
+          check('ex3');
+        }}
+      >
+        ex3
+      </Button>
+      <Button
+        variant="contained"
+        disabled={student?.ex4 !== ''}
+        onClick={() => {
+          check('ex4');
+        }}
+      >
+        ex4
+      </Button>
+      <Button
+        variant="contained"
+        disabled={student?.ex5 !== ''}
+        onClick={() => {
+          check('ex5');
+        }}
+      >
+        ex5
+      </Button>
+    </Stack>
   );
 }
