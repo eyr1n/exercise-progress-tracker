@@ -38,7 +38,8 @@ export function Edit() {
       .then((res) => res.json())
       .then((student) => {
         setStudent(student);
-      });
+      })
+      .catch(() => {});
   }, [id]);
 
   const get = () => {
@@ -50,8 +51,10 @@ export function Edit() {
       })
       .then((res) => res.json())
       .then((student) => {
-        console.log(student);
         setExercises(student);
+      })
+      .catch(() => {
+        window.alert('読み込みに失敗しました');
       });
   };
 
@@ -72,6 +75,10 @@ export function Edit() {
         .then((res) => res.json())
         .then((student) => {
           setStudent(student);
+          window.alert('書き込みに成功しました');
+        })
+        .catch(() => {
+          window.alert('書き込みに失敗しました');
         });
     }
   };

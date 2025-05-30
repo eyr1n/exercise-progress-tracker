@@ -27,7 +27,8 @@ export function Check() {
       .then((res) => res.json())
       .then((student) => {
         setStudent(student);
-      });
+      })
+      .catch(() => {});
   }, [id]);
 
   const check = (exercise: Exercise) => {
@@ -46,6 +47,10 @@ export function Check() {
         .then((res) => res.json())
         .then((student) => {
           setStudent(student);
+          window.alert('処理に成功しました');
+        })
+        .catch(() => {
+          window.alert('処理に失敗しました');
         });
     }
   };

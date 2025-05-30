@@ -1,5 +1,5 @@
 import { hcWithType, type Student } from '@exercise-progress-tracker/server/hc';
-import { Edit } from '@mui/icons-material';
+import { CheckBox, CheckBoxOutlineBlank, Edit } from '@mui/icons-material';
 import {
   Container,
   IconButton,
@@ -63,11 +63,41 @@ export function Home() {
                   <TableCell>{student.id}</TableCell>
                   <TableCell>{student.group}</TableCell>
                   <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.ex1}</TableCell>
-                  <TableCell>{student.ex2}</TableCell>
-                  <TableCell>{student.ex3}</TableCell>
-                  <TableCell>{student.ex4}</TableCell>
-                  <TableCell>{student.ex5}</TableCell>
+                  <TableCell>
+                    {student.ex1 === 'x' ? (
+                      <CheckBox />
+                    ) : (
+                      <CheckBoxOutlineBlank />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {student.ex2 === 'x' ? (
+                      <CheckBox />
+                    ) : (
+                      <CheckBoxOutlineBlank />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {student.ex3 === 'x' ? (
+                      <CheckBox />
+                    ) : (
+                      <CheckBoxOutlineBlank />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {student.ex4 === 'x' ? (
+                      <CheckBox />
+                    ) : (
+                      <CheckBoxOutlineBlank />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {student.ex5 === 'x' ? (
+                      <CheckBox />
+                    ) : (
+                      <CheckBoxOutlineBlank />
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
