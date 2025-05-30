@@ -31,7 +31,7 @@ export class ExerciseProgressTracker {
     if (student == null || student[exercise] === 'x') {
       return false;
     }
-    await this.#db.set(id, { ...student, [exercise]: "x" });
+    await this.#db.set(id, { ...student, [exercise]: 'x' });
     return true;
   }
 }

@@ -14,7 +14,8 @@ const tracker = new ExerciseProgressTracker(
   join(import.meta.dirname, '../../../db.csv'),
 );
 
-export const app = new Hono().use('/*', cors())
+export const app = new Hono()
+  .use('/*', cors())
   .get('/', async (c) => {
     const students = await tracker.students();
     return c.json(students);
@@ -36,21 +37,21 @@ export const app = new Hono().use('/*', cors())
     ),
     async (c) => {
       const id = c.req.param('id');
-      const exercises= c.req.valid('json');
+      const exercises = c.req.valid('json');
       return c.json(await tracker.set(id, exercises));
     },
   )
   .post(
     '/:id/:exercise',
     zValidator(
-      "param",
+      'param',
       z.object({
+        id: z.string(),
         exercise: ExerciseSchema,
       }),
     ),
     async (c) => {
-      const id = c.req.param('id');
-      const { exercise } = c.req.valid('param');
+      const { id, exercise } = c.req.valid('param');
       return c.json(await tracker.check(id, exercise));
     },
   );
