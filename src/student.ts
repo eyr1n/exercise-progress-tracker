@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const Student = z.object({
+export const StudentSchema = z.object({
   id: z.string(),
   group: z.string(),
   name: z.string(),
@@ -11,4 +11,4 @@ export const Student = z.object({
   ex5: z.enum(['', 'x']),
 });
 
-export type Student = z.infer<typeof Student>;
+export type Student = z.infer<typeof StudentSchema>;

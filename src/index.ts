@@ -1,26 +1,54 @@
 import { serve } from '@hono/node-server';
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { CSVDatabase } from './csv_database.js';
-import { Student } from './student.js';
+import { z } from 'zod';
+import { ExerciseSchema } from './exercise.js';
+import { ExerciseProgressTracker } from './exerciseProgressTracker.js';
 
-const db = new CSVDatabase(Student, 'id', 'db.csv');
+const tracker = new ExerciseProgressTracker('db.csv');
 
 const app = new Hono();
 
-app.get('/', async (c) => {
-  const records = await db.records();
-  return c.text(JSON.stringify(records));
+app.get('/api', async (c) => {
+  const students = await tracker.students();
+  return c.json(students);
 });
 
-app.get('/set', async (c) => {
-  const record = await db.get('M211808');
-  if (record == null) {
-    return;
-  }
-  record.ex1 = 'x';
-  await db.set('M211808', record);
-  return c.text(JSON.stringify(record));
+app.get('/api/:id', async (c) => {
+  const id = c.req.param('id');
+  const student = await tracker.get(id);
+  return student != null ? c.json(student) : c.notFound();
 });
+
+app.post(
+  '/api/:id/check',
+  zValidator(
+    'form',
+    z.object({
+      exercise: ExerciseSchema,
+    }),
+  ),
+  async (c) => {
+    const id = c.req.param('id');
+    const { exercise } = c.req.valid('form');
+    return c.json(await tracker.check(id, exercise));
+  },
+);
+
+app.post(
+  '/api/:id/uncheck',
+  zValidator(
+    'form',
+    z.object({
+      exercise: ExerciseSchema,
+    }),
+  ),
+  async (c) => {
+    const id = c.req.param('id');
+    const { exercise } = c.req.valid('form');
+    return c.json(await tracker.check(id, exercise));
+  },
+);
 
 serve(
   {

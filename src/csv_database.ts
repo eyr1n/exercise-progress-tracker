@@ -25,6 +25,10 @@ export class CSVDatabase<T extends ZodObject<ZodRawShape>> {
     this.#encoding = encoding;
   }
 
+  async records(): Promise<z.infer<T>[]> {
+    return this.#loadRecords();
+  }
+
   async get(key: string): Promise<z.TypeOf<T> | null> {
     const records = await this.#loadRecords();
     const record = records.find((record) => record[this.#primaryKey] === key);
@@ -42,10 +46,6 @@ export class CSVDatabase<T extends ZodObject<ZodRawShape>> {
       records.push(record);
     }
     await this.#storeRecords();
-  }
-
-  async records(): Promise<z.infer<T>[]> {
-    return this.#loadRecords();
   }
 
   async #loadRecords(): Promise<z.infer<T>[]> {
