@@ -4,5 +4,20 @@
   "workspaces": [
     "packages/server",
     "packages/client"
-  ]
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "run-p dev:*",
+    "dev:server": "npm run dev --workspace=@exercise-progress-tracker/server",
+    "dev:client": "npm run dev --workspace=@exercise-progress-tracker/client",
+    "start": "run-p start:*",
+    "start:server": "npm run start --workspace=@exercise-progress-tracker/server",
+    "start:client": "npm run start --workspace=@exercise-progress-tracker/client",
+    "lint": "npm run lint --workspaces",
+    "format": "npm run format --workspaces",
+    "preinstall": "npx only-allow npm"
+  },
+  "devDependencies": {
+    "npm-run-all2": "^8.0.4"
+  }
 }
