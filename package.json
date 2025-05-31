@@ -9,10 +9,10 @@
     "build": "npm run build --workspaces",
     "dev": "run-p dev:*",
     "dev:server": "npm run dev --workspace=@exercise-progress-tracker/server",
-    "dev:client": "npm run dev --workspace=@exercise-progress-tracker/client",
+    "dev:client": "npm run dev --workspace=@exercise-progress-tracker/client -- --host",
     "start": "run-p start:*",
     "start:server": "npm run start --workspace=@exercise-progress-tracker/server",
-    "start:client": "npm run start --workspace=@exercise-progress-tracker/client",
+    "start:client": "npm run start --workspace=@exercise-progress-tracker/client -- --host",
     "lint": "npm run lint --workspaces --",
     "format": "npm run format --workspaces --",
     "preinstall": "npx only-allow npm"
