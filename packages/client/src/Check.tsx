@@ -7,9 +7,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Suspense } from 'react';
-import { studentAtom, studentIdAtom } from './atoms';
+import { studentAtom, studentIdAtom, studentsAtom } from './atoms';
 import { client } from './client';
 import { Close } from '@mui/icons-material';
 
@@ -47,6 +47,7 @@ export function Check() {
 }
 
 function CheckImpl() {
+  const refreshStudents = useSetAtom(studentsAtom);
   const id = useAtomValue(studentIdAtom);
   const [student, refreshStudent] = useAtom(studentAtom);
 
@@ -64,6 +65,7 @@ function CheckImpl() {
           },
         })
         .then(() => {
+          refreshStudents();
           refreshStudent();
           window.alert('処理に成功しました');
         })

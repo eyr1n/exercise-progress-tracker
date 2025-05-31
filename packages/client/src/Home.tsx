@@ -1,4 +1,9 @@
-import { CheckBox, CheckBoxOutlineBlank, Edit } from '@mui/icons-material';
+import {
+  CheckBox,
+  CheckBoxOutlineBlank,
+  Edit,
+  Refresh,
+} from '@mui/icons-material';
 import {
   Container,
   IconButton,
@@ -10,7 +15,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Suspense } from 'react';
 import { studentIdAtom, studentsAtom } from './atoms';
 import { useNavigate } from 'react-router';
@@ -27,7 +32,7 @@ export function Home() {
 
 function StudentsTable() {
   const navigate = useNavigate();
-  const students = useAtomValue(studentsAtom);
+  const [students, refreshStudents] = useAtom(studentsAtom);
   const setId = useSetAtom(studentIdAtom);
 
   return (
@@ -42,7 +47,15 @@ function StudentsTable() {
         <Table size="small" stickyHeader sx={{ whiteSpace: 'nowrap' }}>
           <TableHead>
             <TableRow>
-              <TableCell />
+              <TableCell>
+                <IconButton
+                  onClick={() => {
+                    refreshStudents();
+                  }}
+                >
+                  <Refresh />
+                </IconButton>
+              </TableCell>
               <TableCell>学籍番号</TableCell>
               <TableCell>グループ</TableCell>
               <TableCell>名前</TableCell>

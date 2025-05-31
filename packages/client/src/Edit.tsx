@@ -9,9 +9,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useState } from 'react';
-import { studentAtom, studentIdAtom } from './atoms';
+import { studentAtom, studentIdAtom, studentsAtom } from './atoms';
 import { client } from './client';
 import { Close } from '@mui/icons-material';
 
@@ -49,6 +49,7 @@ export function Edit() {
 }
 
 function EditImpl() {
+  const refreshStudents = useSetAtom(studentsAtom);
   const id = useAtomValue(studentIdAtom);
   const student = useAtomValue(studentAtom);
   const [exercises, setExercises] = useState<Pick<Student, Exercise> | null>(
@@ -75,6 +76,7 @@ function EditImpl() {
           json: exercises,
         })
         .then(() => {
+          refreshStudents();
           window.alert('書き込みに成功しました');
         })
         .catch(() => {

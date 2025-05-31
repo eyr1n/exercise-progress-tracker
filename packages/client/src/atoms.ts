@@ -2,7 +2,7 @@ import { atom } from 'jotai';
 import { client } from './client';
 import { atomWithRefresh } from 'jotai/utils';
 
-export const studentsAtom = atom(() =>
+export const studentsAtom = atomWithRefresh(() =>
   client.students.$get().then((res) => res.json()),
 );
 
