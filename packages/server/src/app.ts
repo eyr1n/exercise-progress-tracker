@@ -11,7 +11,7 @@ import {
 import { cors } from 'hono/cors';
 
 const tracker = new ExerciseProgressTracker(
-  join(import.meta.dirname, '../../../db.csv'),
+  join(import.meta.dirname, '../../../students.csv'),
 );
 
 export const app = new Hono()
