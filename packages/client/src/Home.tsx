@@ -47,7 +47,7 @@ function StudentsTable() {
         <Table size="small" stickyHeader sx={{ whiteSpace: 'nowrap' }}>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell padding="checkbox" align="center">
                 <IconButton
                   onClick={() => {
                     refreshStudents();
@@ -59,17 +59,17 @@ function StudentsTable() {
               <TableCell>学籍番号</TableCell>
               <TableCell>グループ</TableCell>
               <TableCell>名前</TableCell>
-              <TableCell>ex1</TableCell>
-              <TableCell>ex2</TableCell>
-              <TableCell>ex3</TableCell>
-              <TableCell>ex4</TableCell>
-              <TableCell>ex5</TableCell>
+              <TableCell align="center">ex1</TableCell>
+              <TableCell align="center">ex2</TableCell>
+              <TableCell align="center">ex3</TableCell>
+              <TableCell align="center">ex4</TableCell>
+              <TableCell align="center">ex5</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {students.map((student) => (
               <TableRow key={student.id}>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox" align="center">
                   <IconButton
                     onClick={() => {
                       setId(student.id);
@@ -82,35 +82,35 @@ function StudentsTable() {
                 <TableCell>{student.id}</TableCell>
                 <TableCell>{student.group}</TableCell>
                 <TableCell>{student.name}</TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {student.ex1 === 'x' ? (
                     <CheckBox />
                   ) : (
                     <CheckBoxOutlineBlank />
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {student.ex2 === 'x' ? (
                     <CheckBox />
                   ) : (
                     <CheckBoxOutlineBlank />
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {student.ex3 === 'x' ? (
                     <CheckBox />
                   ) : (
                     <CheckBoxOutlineBlank />
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {student.ex4 === 'x' ? (
                     <CheckBox />
                   ) : (
                     <CheckBoxOutlineBlank />
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {student.ex5 === 'x' ? (
                     <CheckBox />
                   ) : (
