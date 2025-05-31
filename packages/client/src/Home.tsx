@@ -24,13 +24,13 @@ export function Home() {
   return (
     <Container sx={{ paddingY: 2, flexGrow: 1, overflow: 'hidden' }}>
       <Suspense>
-        <StudentsTable />
+        <HomeImpl />
       </Suspense>
     </Container>
   );
 }
 
-function StudentsTable() {
+function HomeImpl() {
   const navigate = useNavigate();
   const [students, refreshStudents] = useAtom(studentsAtom);
   const setId = useSetAtom(studentIdAtom);
