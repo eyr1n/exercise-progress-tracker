@@ -15,7 +15,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { Suspense } from 'react';
 import { studentIdAtom, studentsAtom } from './atoms';
 import { useNavigate } from 'react-router';
