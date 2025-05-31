@@ -1,65 +1,67 @@
-import {
-  hcWithType,
-  type Exercise,
-  type Student,
-} from '@exercise-progress-tracker/server/hc';
+import type { Exercise, Student } from '@exercise-progress-tracker/server/hc';
 import {
   Button,
   Checkbox,
   Container,
   FormControlLabel,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
-
-const client = hcWithType('http://localhost:3000/');
+import { useAtom, useAtomValue } from 'jotai';
+import { Suspense, useState } from 'react';
+import { studentAtom, studentIdAtom } from './atoms';
+import { client } from './client';
+import { Close } from '@mui/icons-material';
 
 export function Edit() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get('id') ?? '';
-  const setId = (id: string) => {
-    setSearchParams({ id });
-  };
-  const [student, setStudent] = useState<Student | null>(null);
+  const [id, setId] = useAtom(studentIdAtom);
+
+  return (
+    <Container sx={{ paddingY: 2 }}>
+      <Stack gap={2}>
+        <Typography variant="h4">訂正</Typography>
+        <Stack direction="row" gap={1}>
+          <TextField
+            sx={{ width: '100%' }}
+            label="学籍番号"
+            autoComplete="off"
+            value={id}
+            onChange={(e) => {
+              setId(e.target.value);
+            }}
+          />
+          <IconButton
+            onClick={() => {
+              setId('');
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Stack>
+        <Suspense>
+          <EditImpl />
+        </Suspense>
+      </Stack>
+    </Container>
+  );
+}
+
+function EditImpl() {
+  const id = useAtomValue(studentIdAtom);
+  const student = useAtomValue(studentAtom);
   const [exercises, setExercises] = useState<Pick<Student, Exercise> | null>(
     null,
   );
 
-  useEffect(() => {
-    client.student[':id']
-      .$get({
-        param: {
-          id,
-        },
-      })
-      .then((res) => res.json())
-      .then((student) => {
-        setStudent(student);
-      })
-      .catch(() => {});
-  }, [id]);
-
   const get = () => {
-    client.student[':id']
-      .$get({
-        param: {
-          id,
-        },
-      })
-      .then((res) => res.json())
-      .then((student) => {
-        setExercises(student);
-      })
-      .catch(() => {
-        window.alert('読み込みに失敗しました');
-      });
+    setExercises(student);
   };
 
   const set = () => {
     if (
+      id != null &&
       exercises != null &&
       window.confirm(
         `${student?.name}さん(${student?.id})の進捗を修正しますか?`,
@@ -72,9 +74,7 @@ export function Edit() {
           },
           json: exercises,
         })
-        .then((res) => res.json())
-        .then((student) => {
-          setStudent(student);
+        .then(() => {
           window.alert('書き込みに成功しました');
         })
         .catch(() => {
@@ -95,29 +95,20 @@ export function Edit() {
   };
 
   return (
-    <Container sx={{ paddingY: 2 }}>
-      <Stack gap={2}>
-        <Typography variant="h4">訂正</Typography>
-        <Typography>学籍番号: {student?.id}</Typography>
-        <Typography>グループ: {student?.group}</Typography>
-        <Typography>名前: {student?.name}</Typography>
-        <TextField
-          label="学籍番号"
-          autoComplete="off"
-          value={id}
-          onChange={(e) => {
-            setId(e.target.value);
-          }}
-        />
+    student != null && (
+      <>
+        <Typography>学籍番号: {student.id}</Typography>
+        <Typography>グループ: {student.group}</Typography>
+        <Typography>名前: {student.name}</Typography>
         <Stack direction="row" gap={2}>
-          <Button variant="contained" disabled={student == null} onClick={get}>
+          <Button variant="contained" onClick={get}>
             読み込み
           </Button>
-          <Button variant="contained" disabled={student == null} onClick={set}>
+          <Button variant="contained" color="error" onClick={set}>
             書き込み
           </Button>
         </Stack>
-        <Stack direction="row" gap={2} flexWrap="wrap">
+        <Stack>
           <FormControlLabel
             control={
               <Checkbox
@@ -179,7 +170,7 @@ export function Edit() {
             label="ex5"
           />
         </Stack>
-      </Stack>
-    </Container>
+      </>
+    )
   );
 }

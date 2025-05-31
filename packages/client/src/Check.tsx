@@ -1,35 +1,54 @@
+import type { Exercise } from '@exercise-progress-tracker/server/hc';
 import {
-  hcWithType,
-  type Exercise,
-  type Student,
-} from '@exercise-progress-tracker/server/hc';
-import { Button, Container, Stack, TextField, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
-
-const client = hcWithType('http://localhost:3000/');
+  Button,
+  Container,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useAtom, useAtomValue } from 'jotai';
+import { Suspense } from 'react';
+import { studentAtom, studentIdAtom } from './atoms';
+import { client } from './client';
+import { Close } from '@mui/icons-material';
 
 export function Check() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get('id') ?? '';
-  const setId = (id: string) => {
-    setSearchParams({ id });
-  };
-  const [student, setStudent] = useState<Student | null>(null);
+  const [id, setId] = useAtom(studentIdAtom);
 
-  useEffect(() => {
-    client.student[':id']
-      .$get({
-        param: {
-          id,
-        },
-      })
-      .then((res) => res.json())
-      .then((student) => {
-        setStudent(student);
-      })
-      .catch(() => {});
-  }, [id]);
+  return (
+    <Container sx={{ paddingY: 2 }}>
+      <Stack gap={2}>
+        <Typography variant="h4">完了確認</Typography>
+        <Stack direction="row" gap={1}>
+          <TextField
+            sx={{ width: '100%' }}
+            label="学籍番号"
+            autoComplete="off"
+            value={id}
+            onChange={(e) => {
+              setId(e.target.value);
+            }}
+          />
+          <IconButton
+            onClick={() => {
+              setId('');
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Stack>
+        <Suspense>
+          <CheckImpl />
+        </Suspense>
+      </Stack>
+    </Container>
+  );
+}
+
+function CheckImpl() {
+  const id = useAtomValue(studentIdAtom);
+  const [student, refreshStudent] = useAtom(studentAtom);
 
   const check = (exercise: Exercise) => {
     if (
@@ -44,9 +63,8 @@ export function Check() {
             exercise,
           },
         })
-        .then((res) => res.json())
-        .then((student) => {
-          setStudent(student);
+        .then(() => {
+          refreshStudent();
           window.alert('処理に成功しました');
         })
         .catch(() => {
@@ -56,23 +74,14 @@ export function Check() {
   };
 
   return (
-    <Container sx={{ paddingY: 2 }}>
-      <Stack gap={2}>
-        <Typography variant="h4">完了確認</Typography>
-        <Typography>学籍番号: {student?.id}</Typography>
-        <Typography>グループ: {student?.group}</Typography>
-        <Typography>名前: {student?.name}</Typography>
-        <TextField
-          label="学籍番号"
-          autoComplete="off"
-          value={id}
-          onChange={(e) => {
-            setId(e.target.value);
-          }}
-        />
+    student != null && (
+      <>
+        <Typography>学籍番号: {student.id}</Typography>
+        <Typography>グループ: {student.group}</Typography>
+        <Typography>名前: {student.name}</Typography>
         <Button
           variant="contained"
-          disabled={student?.ex1 !== ''}
+          disabled={student.ex1 !== ''}
           onClick={() => {
             check('ex1');
           }}
@@ -81,7 +90,7 @@ export function Check() {
         </Button>
         <Button
           variant="contained"
-          disabled={student?.ex2 !== ''}
+          disabled={student.ex2 !== ''}
           onClick={() => {
             check('ex2');
           }}
@@ -90,7 +99,7 @@ export function Check() {
         </Button>
         <Button
           variant="contained"
-          disabled={student?.ex3 !== ''}
+          disabled={student.ex3 !== ''}
           onClick={() => {
             check('ex3');
           }}
@@ -99,7 +108,7 @@ export function Check() {
         </Button>
         <Button
           variant="contained"
-          disabled={student?.ex4 !== ''}
+          disabled={student.ex4 !== ''}
           onClick={() => {
             check('ex4');
           }}
@@ -108,14 +117,14 @@ export function Check() {
         </Button>
         <Button
           variant="contained"
-          disabled={student?.ex5 !== ''}
+          disabled={student.ex5 !== ''}
           onClick={() => {
             check('ex5');
           }}
         >
           ex5
         </Button>
-      </Stack>
-    </Container>
+      </>
+    )
   );
 }
