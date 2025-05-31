@@ -51,7 +51,7 @@ export function Edit() {
 function EditImpl() {
   const refreshStudents = useSetAtom(studentsAtom);
   const id = useAtomValue(studentIdAtom);
-  const student = useAtomValue(studentAtom);
+  const [student, refreshStudent] = useAtom(studentAtom);
   const [exercises, setExercises] = useState<Pick<Student, Exercise> | null>(
     null,
   );
@@ -77,6 +77,7 @@ function EditImpl() {
         })
         .then(() => {
           refreshStudents();
+          refreshStudent();
           window.alert('書き込みに成功しました');
         })
         .catch(() => {
