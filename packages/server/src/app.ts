@@ -9,6 +9,7 @@ import {
   type Exercise,
 } from './schemas/index.js';
 import { cors } from 'hono/cors';
+import { basicAuth } from 'hono/basic-auth';
 
 const tracker = new ExerciseProgressTracker(
   join(import.meta.dirname, '../../../students.csv'),
@@ -16,6 +17,13 @@ const tracker = new ExerciseProgressTracker(
 
 export const app = new Hono()
   .use('/*', cors())
+  .use(
+    '/*',
+    basicAuth({
+      username: process.env.USERNAME ?? '',
+      password: process.env.PASSWORD ?? '',
+    }),
+  )
   .get('/students', async (c) => {
     const students = await tracker.students();
     return c.json(students);
