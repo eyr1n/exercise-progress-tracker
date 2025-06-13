@@ -11,8 +11,7 @@ import {
 } from '@mui/material';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useState } from 'react';
-import { studentAtom, studentIdAtom, studentsAtom } from './atoms';
-import { client } from './client';
+import { clientAtom, studentAtom, studentIdAtom, studentsAtom } from './atoms';
 import { Close } from '@mui/icons-material';
 
 export function Edit() {
@@ -49,6 +48,7 @@ export function Edit() {
 }
 
 function EditImpl() {
+  const client = useAtomValue(clientAtom);
   const refreshStudents = useSetAtom(studentsAtom);
   const id = useAtomValue(studentIdAtom);
   const [student, refreshStudent] = useAtom(studentAtom);

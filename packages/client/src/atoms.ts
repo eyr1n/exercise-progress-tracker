@@ -1,16 +1,31 @@
+import { hcWithType } from '@exercise-progress-tracker/server/hc';
 import { atom } from 'jotai';
-import { client } from './client';
 import { atomWithRefresh } from 'jotai/utils';
 
-export const studentsAtom = atomWithRefresh(() =>
-  client.students.$get().then((res) => res.json()),
+export const usernameAtom = atom('');
+
+export const passwordAtom = atom('');
+
+export const clientAtom = atom((get) =>
+  hcWithType(`http://${location.hostname}:3001/`, {
+    headers: {
+      Authorization: `Basic ${btoa(`${get(usernameAtom)}:${get(passwordAtom)}`)}`,
+    },
+  }),
+);
+
+export const studentsAtom = atomWithRefresh((get) =>
+  get(clientAtom)
+    .students.$get()
+    .then((res) => res.json())
+    .catch(() => []),
 );
 
 export const studentIdAtom = atom('');
 
 export const studentAtom = atomWithRefresh((get) =>
-  client.student[':id']
-    .$get({
+  get(clientAtom)
+    .student[':id'].$get({
       param: {
         id: get(studentIdAtom),
       },

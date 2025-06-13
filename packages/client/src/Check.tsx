@@ -9,8 +9,7 @@ import {
 } from '@mui/material';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Suspense } from 'react';
-import { studentAtom, studentIdAtom, studentsAtom } from './atoms';
-import { client } from './client';
+import { clientAtom, studentAtom, studentIdAtom, studentsAtom } from './atoms';
 import { Close } from '@mui/icons-material';
 
 export function Check() {
@@ -47,6 +46,7 @@ export function Check() {
 }
 
 function CheckImpl() {
+  const client = useAtomValue(clientAtom);
   const refreshStudents = useSetAtom(studentsAtom);
   const id = useAtomValue(studentIdAtom);
   const [student, refreshStudent] = useAtom(studentAtom);
