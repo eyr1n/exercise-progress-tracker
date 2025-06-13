@@ -21,7 +21,7 @@ export const app = new Hono()
     '/*',
     basicAuth({
       username: process.env.EPT_USERNAME ?? '',
-      password: process.env.EPT_oPASSWORD ?? '',
+      password: process.env.EPT_PASSWORD ?? '',
     }),
   )
   .get('/students', async (c) => {
