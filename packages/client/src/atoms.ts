@@ -7,7 +7,7 @@ export const usernameAtom = atom('');
 export const passwordAtom = atom('');
 
 export const clientAtom = atom((get) =>
-  hcWithType(`http://${location.hostname}:3001/`, {
+  hcWithType(`http://${location.hostname}:3000/`, {
     headers: {
       Authorization: `Basic ${btoa(`${get(usernameAtom)}:${get(passwordAtom)}`)}`,
     },
